@@ -1,0 +1,34 @@
+name: Build MTA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install MBT
+        run: npm install -g mbt
+
+      - name: Build MTA
+        run: mbt build
+
+      - name: Upload MTAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mtar
+          path: mta_archives/*.mtar
+          if-no-files-found: error

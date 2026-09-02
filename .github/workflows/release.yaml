@@ -1,0 +1,21 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  deployments: write
+
+jobs:
+  tests:
+     uses: I528716/Integration-suite/.github/workflows/test.yaml@main
+     secrets: inherit
+  deploy-cf:
+    needs: [tests]
+    uses: I528716/Integration-suite/.github/workflows/cf.yaml@main
+    secrets: inherit
+    with:
+      environment: Production
